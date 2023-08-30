@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { BankDto } from './dto/banks.dto';
 
 @Injectable()
 export class AccountsService {
-  constructor(
-    private configService: ConfigService,
-  ) {}
+  constructor(private configService: ConfigService) {}
 
   async getBankAccounts() {
     const username = this.configService.get('YAPILY_APPLICATION_ID');
@@ -20,6 +19,7 @@ export class AccountsService {
     });
 
     const data = await resp.json();
-    return data;
+    const bankData: Array<BankDto> = data.data;
+    return bankData;
   }
 }
