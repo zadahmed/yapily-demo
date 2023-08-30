@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import config from './common/configs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
+import { AccountsModule } from "./accounts/accounts.module";
 
 @Module({
   imports: [
@@ -18,7 +19,6 @@ import { GqlConfigService } from './gql-config.service';
       isGlobal: true,
       prismaServiceOptions: {
         middlewares: [
-          // configure your prisma middleware
           loggingMiddleware({
             logger: new Logger('PrismaMiddleware'),
             logLevel: 'log',
@@ -26,14 +26,13 @@ import { GqlConfigService } from './gql-config.service';
         ],
       },
     }),
-
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       useClass: GqlConfigService,
     }),
-
     AuthModule,
     UsersModule,
+    AccountsModule
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
