@@ -13,7 +13,7 @@ export class AccountsService {
     this.password = this.configService.get('YAPILY_APPLICATION_SECRET');
   }
 
-  async getBankAccounts() {
+  async getBankAccounts(): Promise<Bank[]> {
     const resp = await fetch(`https://api.yapily.com/institutions`, {
       method: 'GET',
       headers: {
@@ -24,11 +24,11 @@ export class AccountsService {
     });
 
     const data = await resp.json();
-    const bankData: Array<Bank> = data.data;
+    const bankData: Bank[] = data.data;
     return bankData;
   }
 
-  async authorizeAccount(userId: string) {
+  async authorizeAccount(userId: string): Promise<Bank[]> {
     const resp = await fetch(`https://api.yapily.com/account-auth-requests`, {
       method: 'POST',
       headers: {
@@ -46,7 +46,7 @@ export class AccountsService {
     });
 
     const data = await resp.json();
-    const bankData: Array<Bank> = data.data;
+    const bankData: Bank[] = data.data;
     return bankData;
   }
 
@@ -54,7 +54,7 @@ export class AccountsService {
     this.consent = consent;
   }
 
-  async getUserAccounts() {
+  async getUserAccounts(): Promise<BankAccount[]> {
     const resp = await fetch(`https://api.yapily.com/accounts`, {
       method: 'GET',
       headers: {
@@ -67,7 +67,27 @@ export class AccountsService {
     });
 
     const data = await resp.json();
-    const bankAccountData: Array<BankAccount> = data.data;
+    const bankAccountData: BankAccount[] = data.data;
     return bankAccountData;
+  }
+
+  async getAccountTransactions(accountId: string): Promise<Transaction[]> {
+    const resp = await fetch(
+      `https://api.yapily.com/accounts/${accountId}/transactions`,
+      {
+        method: 'GET',
+        headers: {
+          consent: this.consent,
+          'psu-id': 'string',
+          'psu-corporate-id': 'string',
+          'psu-ip-address': 'string',
+          Authorization: 'Basic ' + btoa(`${this.username}:${this.password}`),
+        },
+      },
+    );
+
+    const data = await resp.json();
+    const transactionData: Transaction[] = data.data;
+    return transactionData;
   }
 }
