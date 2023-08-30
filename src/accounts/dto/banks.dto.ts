@@ -1,4 +1,4 @@
-export interface BankDto {
+export interface Bank {
     id: string;
     name: string;
     fullName: string;
@@ -13,5 +13,8 @@ export interface BankDto {
       type: string;
     }>;
     features: string[]; 
+    institutionConsentId?: string;
+    authorisationUrl?: string;
+
   }
   
