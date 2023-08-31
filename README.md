@@ -46,3 +46,8 @@ The application uses a PostgreSQL database with the following schema:
 - `AccountName`: This table stores account name information. Each account name has an `id`, `name`, `bankAccountId`, and `bankAccount`.
 
 The `User`, `Consent`, and `BankAccount` tables are related. Each `User` can have multiple `BankAccounts` and one `Consent`. Each `Consent` is associated with one `User`. Each `BankAccount` is associated with one `User` and can have multiple `Transactions`, `AccountIdentifications`, `AccountBalances`, and `AccountNames`.
+
+
+## Workflow to sync data on DB with Yapily API
+
+![Workflow](assets/workflowtosyncdata.png)
