@@ -19,13 +19,5 @@ export default async () => {
         ],
       ],
     },
-    '@nestjs/graphql/plugin': {
-      models: [
-        [
-          import('./common/models/base.model'),
-          { BaseModel: { id: {}, createdAt: {}, updatedAt: {} } },
-        ],
-      ],
-    },
   };
 };
