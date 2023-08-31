@@ -4,16 +4,88 @@
 
 Table User {
   id String [pk]
+  email String [unique, not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  email String [unique, not null]
-  password String [not null]
-  firstname String
-  lastname String
-  role Role [not null]
+  consent Consent
+  bankAccounts BankAccount [not null]
 }
 
-Enum Role {
-  ADMIN
-  USER
+Table Consent {
+  id String [pk]
+  userId String [unique, not null]
+  user User [not null]
+  consent String [not null]
+  expiry DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 }
+
+Table BankAccount {
+  id String [pk]
+  type String [not null]
+  balance Float [not null]
+  currency String [not null]
+  usageType String [not null]
+  accountType String [not null]
+  nickname String
+  userId String [not null]
+  user User [not null]
+  accountNames AccountName [not null]
+  accountIdentifications AccountIdentification [not null]
+  accountBalances AccountBalance [not null]
+  transactions Transaction [not null]
+}
+
+Table Transaction {
+  id String [pk]
+  date String [not null]
+  bookingDateTime String [not null]
+  valueDateTime String [not null]
+  status String [not null]
+  amount Float [not null]
+  currency String [not null]
+  reference String [not null]
+  description String [not null]
+  transactionInformation String[] [not null]
+  isoBankTransactionCode Json [not null]
+  proprietaryBankTransactionCode Json [not null]
+  balance Json [not null]
+  enrichment Json [not null]
+  bankAccountId String [not null]
+  bankAccount BankAccount [not null]
+}
+
+Table AccountIdentification {
+  id String [pk]
+  identification String [not null]
+  bankAccountId String [not null]
+  bankAccount BankAccount [not null]
+}
+
+Table AccountBalance {
+  id String [pk]
+  balance Float [not null]
+  currency String [not null]
+  bankAccountId String [not null]
+  bankAccount BankAccount [not null]
+}
+
+Table AccountName {
+  id String [pk]
+  name String [not null]
+  bankAccountId String [not null]
+  bankAccount BankAccount [not null]
+}
+
+Ref: Consent.userId - User.id [delete: Cascade]
+
+Ref: BankAccount.userId > User.id [delete: Cascade]
+
+Ref: Transaction.bankAccountId > BankAccount.id [delete: Cascade]
+
+Ref: AccountIdentification.bankAccountId > BankAccount.id [delete: Cascade]
+
+Ref: AccountBalance.bankAccountId > BankAccount.id [delete: Cascade]
+
+Ref: AccountName.bankAccountId > BankAccount.id [delete: Cascade]
